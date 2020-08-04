@@ -55,7 +55,7 @@ function Categoria () {
         <FormField
           label="Nome"
           type="text"
-          name="nome"
+          name="titulo"
           value={values.nome}
           onChange={handleChange}
         />
