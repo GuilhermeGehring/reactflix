@@ -3,32 +3,22 @@ import PageDefault from '../../../components/PageDefault'
 import { Link } from 'react-router-dom'
 import FormField from '../../../components/FormField'
 import Button from '../../../components/Button'
+import useForm from '../../../hooks/useForm'
 
 function Categoria () {
   const valoresIniciais = {
-    nome: '',
+    titulo: '',
     descricao: '',
     cor: ''
   }
   const [categorias, setCategorias] = useState([])
-  const [values, setValues] = useState(valoresIniciais)
 
-  function setValue (chave, valor) {
-    setValues({
-      ...values,
-      [chave]: valor
-    })
-  }
-
-  function handleChange ({ target }) {
-    setValue(
-      target.getAttribute('name'),
-      target.value
-    )
-  }
+  const { handleChange, values, clearForm } = useForm(valoresIniciais)
 
   useEffect(() => {
-    const url = 'https://gehring-devflix.herokuapp.com/categorias'
+    const url = window.location.hostname.includes('localhost')
+      ? 'http://localhost:8080/categorias'
+      : 'https://gehring-devflix.herokuapp.com/categorias'
     fetch(url
     ).then(async (response) => {
       const resposta = await response.json()
@@ -40,7 +30,7 @@ function Categoria () {
 
   return (
     <PageDefault>
-      <h1>Cadastro de Categoria: {values.nome}</h1>
+      <h1>Cadastro de Categoria: {values.titulo}</h1>
 
       <form onSubmit={function handleSubmit (infos) {
         infos.preventDefault()
@@ -49,14 +39,14 @@ function Categoria () {
           values
         ])
 
-        setValues(valoresIniciais)
+        clearForm()
       }}>
 
         <FormField
-          label="Nome"
+          label="titulo"
           type="text"
           name="titulo"
-          value={values.nome}
+          value={values.titulo}
           onChange={handleChange}
         />
 
@@ -64,7 +54,7 @@ function Categoria () {
           label="Descrição"
           type="textarea"
           name="descricao"
-          value={values.nome}
+          value={values.titulo}
           onChange={handleChange}
         />
 
@@ -88,7 +78,7 @@ function Categoria () {
         {categorias.map((categoria, index) => {
           return (
             <li key={`${categoria}${index}`}>
-              {categoria.nome}
+              {categoria.titulo}
             </li>
           )
         })}
